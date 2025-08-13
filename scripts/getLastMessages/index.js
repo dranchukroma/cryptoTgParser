@@ -1,6 +1,6 @@
 // scripts/fetchHistory.js
 import 'dotenv/config.js';
-import { fetchRecentMessages } from '../config/botInstance.js';
+import { fetchRecentMessages } from './helpers';
 
 (async () => {
   const CHANNEL = process.env.CHANNEL_ID; // '@username' або '-100…'

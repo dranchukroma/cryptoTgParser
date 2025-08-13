@@ -7,7 +7,7 @@ import {
     DAILY_RE, REVIEW_HEAD_RE, TICKER_INLINE_RE
 } from '../config/RedexTemplates.js';
 
-const MY_LINK = process.env.MY_LINK || ''; // ← твоя партнерська/особиста ссилка
+const MY_LINK = process.env.MY_LINK || ''; //Link than will be replaced
 
 export function replaceLinks(text = '') {
     if (!text) return text;
@@ -121,10 +121,6 @@ function parseReview(text) {
     return { type: 'review', primary, timeframe };
 }
 
-/**
- * Основний класифікатор:
- * Повертає null якщо повідомлення не належить до потрібних типів.
- */
 export function classifyAndExtract(msg) {
     const rawText = (msg.text || '').trim();
     const text = replaceLinks(rawText);

@@ -1,6 +1,6 @@
 export const SIGNAL_HEAD_RE = /\b([A-Z]{2,10})\s+(LONG|SHORT)\b(?:\s*\(LIMIT\))?/i;
 export const ENTRY_RE = /Entry\s*:\s*([0-9]+(?:\.[0-9]+)?)(?:\s*[-–]\s*([0-9]+(?:\.[0-9]+)?))?/i;
-export const TAKE_RE = /(?:Take|TP)\s*:\s*([0-9]+(?:\.[0-9]+)?(?:\s*,\s*[0-9]+(?:\.[0-9]+)?)?)/ig; // збираємо всі входження
+export const TAKE_RE = /(?:Take|TP)\s*:\s*([0-9]+(?:\.[0-9]+)?(?:\s*,\s*[0-9]+(?:\.[0-9]+)?)?)/ig;
 export const STOP_RE = /(?:Stop|SL)\s*:\s*([0-9]+(?:\.[0-9]+)?)/i;
 export const LEV_RE = /\bX\s?([0-9]{1,3})\b/i;
 
