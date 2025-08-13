@@ -1,55 +1,38 @@
-import { TelegramClient } from 'telegram'
-import { StringSession } from 'telegram/sessions/index.js'
-import { NewMessage } from 'telegram/events/index.js'
-import dotenv from 'dotenv';
-dotenv.config();
+// scripts/listenNew.js
+import 'dotenv/config.js';
+import client from './config/botInstance.js'
+import { NewMessage } from 'telegram/events/index.js';
+import { Api } from 'telegram/tl/index.js';
+import { classifyAndExtract } from './helpers/parseMessages.js';
+import { messageSource } from './helpers/checkMessageSource.js';
 
-const apiId = Number(process.env.API_ID);
-const apiHash = process.env.API_HASH;
-const channelId = process.env.CHANNEL_ID;
-const sessionString = process.env.SESSION_STRING;
+const TARGET = (process.env.SEND_MESSAGES_TO || '').trim(); // куди дублювати (опційно)
 
-
-
+// Loop event
 (async () => {
-    const client = new TelegramClient(new StringSession(sessionString), apiId, apiHash, {
-        connectionRetries: 5,
-    });
+  await client.start();
+  console.log('🟢 Listening new messages...');
 
-    await client.start();
+  // Creating message listener
+  client.addEventHandler(async (event) => {
+    // Check if message is from correct group
+    const msg = event.message;
+    if (!(await messageSource(msg))) return;
 
-    client.addEventHandler(async (event) => {
-        const message = event.message;
-        const peerId = message?.peerId?.channelId?.value;
+    // Parse and format messages
+    const parsed = classifyAndExtract(msg);
+    if (!parsed) return; // If format is compare with REDEX ignore message
 
-        // Якщо повідомлення з потрібного каналу
-        if (`-100${peerId}` === channelId.toString() || channelId.toString().startsWith("@")) {
-            console.log("------");
-            console.log("📩 Нове повідомлення:");
-            console.log("Текст:", message.message || "[без тексту]");
-            console.log("Дата:", message.date);
+    const formatedMessage = parsed.text; // Format messages
 
-            const targetChatId = '-1002528811587'
-            try {
-                if (message.message) {
-                    await client.sendMessage(targetChatId, {
-                        message: message.message
-                    });
-                }
-
-                if (message.media) {
-                    await client.sendFile(targetChatId, {
-                        file: message.media,
-                        caption: message.message || ''
-                    });
-                }
-
-                console.log('📤 Повідомлення успішно опубліковано як нове');
-            } catch (err) {
-                console.error('❌ Помилка відправки:', err);
-            }
-
+    // Send formated message to target group
+    if (TARGET) {
+      try {
+        console.log(parsed);
+        await client.sendMessage(TARGET, { message: formatedMessage });
+      } catch (e) {
+        console.error(`❌ Message has not been send to ${TARGET}:`, e);
+      }
     }
-    }, new NewMessage({}));
-
-}) ();
+  }, new NewMessage({}));
+})();
