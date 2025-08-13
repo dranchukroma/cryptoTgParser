@@ -5,7 +5,7 @@ import {
     SIGNAL_HEAD_RE, ENTRY_RE, TAKE_RE, STOP_RE, LEV_RE,
     UPDATE_STOP_RE, UPDATE_MARGIN_RE, UPDATE_CLOSE_RE,
     DAILY_RE, REVIEW_HEAD_RE, TICKER_INLINE_RE
-} from '../config/RedexTemplates.js';
+} from '../config/regexTemplates.js';
 
 const MY_LINK = process.env.MY_LINK || ''; //Link than will be replaced
 

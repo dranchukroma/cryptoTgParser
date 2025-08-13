@@ -4,7 +4,7 @@ import client from './config/botInstance.js'
 import { NewMessage } from 'telegram/events/index.js';
 import { Api } from 'telegram/tl/index.js';
 import { classifyAndExtract } from './helpers/parseMessages.js';
-import { messageSource } from './helpers/checkMessageSource.js';
+import { messageSourceDetailed } from './helpers/checkMessageSource.js';
 
 const TARGET = (process.env.SEND_MESSAGES_TO || '').trim(); // куди дублювати (опційно)
 
@@ -17,7 +17,9 @@ const TARGET = (process.env.SEND_MESSAGES_TO || '').trim(); // куди дубл
   client.addEventHandler(async (event) => {
     // Check if message is from correct group
     const msg = event.message;
-    if (!(await messageSource(msg))) return;
+
+    const isSourceGroup = await messageSourceDetailed(msg);
+    if (!isSourceGroup.ok) return;
 
     // Parse and format messages
     const parsed = classifyAndExtract(msg);
@@ -29,7 +31,7 @@ const TARGET = (process.env.SEND_MESSAGES_TO || '').trim(); // куди дубл
     if (TARGET) {
       try {
         console.log(parsed);
-        await client.sendMessage(TARGET, { message: formatedMessage });
+        // await client.sendMessage(TARGET, { message: formatedMessage });
       } catch (e) {
         console.error(`❌ Message has not been send to ${TARGET}:`, e);
       }
