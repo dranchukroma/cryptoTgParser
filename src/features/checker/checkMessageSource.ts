@@ -11,7 +11,6 @@ type MessageSourceResult = {
   index: number | null;
 };
 
-
 /**
  * Checks, if message is from allowed chanels list to parse source.
  * It can be group id ('-100...'), username ('@username) or chat id
