@@ -1,11 +1,4 @@
 import type { Api } from "telegram";
-import type { PhotoInfo } from "../images/types.js";
-
-export type MsgLike = {
-  hasMedia?: boolean;
-  mediaType?: string;
-  albumId?: string | number | null;
-};
 
 export type WrapMeta = {
   id: number | string | undefined; // id «якорного» повідомлення
@@ -17,16 +10,14 @@ export type WrapMeta = {
 export type WrapResult<T = unknown> = {
   type: string;
   text: string;
-  media: { photos: PhotoInfo[] };
   meta: WrapMeta;
   data: T;
 };
 
-export type MsgLikeExtended = MsgLike & {
+export type MsgLike = {
   id?: string | number;
   date?: string | Date | number; // number теж дозволяємо (unix seconds)
   peer?: Api.TypePeer; // <-- додали
-  __raw?: any; // (якщо прокидаєш сирий msg)
 };
 
 export type Side = "LONG" | "SHORT";

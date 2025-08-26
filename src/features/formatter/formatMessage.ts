@@ -3,10 +3,13 @@
 // Вихід: { type, text, attachments, meta } — text повністю готовий до відправки
 
 // ── типи з вашого пайплайну ───────────────────────────────────────────────────
+export type MediaType = "photo";
+
 export type PhotoInfo = {
-  messageId: number;
-  groupedId: string | number | null;
-  mediaType: "photo";
+  photoId: string;                 // id конкретного повідомлення з фото
+  accessHash: string;                 // id конкретного повідомлення з фото
+  groupedId: string | number | null; // ідентифікатор альбому (або null)
+  mediaType: MediaType;              // наразі тільки "photo"
 };
 
 type Entry = { price: number } | { from: number; to: number };

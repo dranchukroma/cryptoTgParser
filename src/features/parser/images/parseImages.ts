@@ -1,13 +1,17 @@
 import type { PhotoInfo } from "./types.js";
 
-export function collectPhotosFromRaw(raw: any): PhotoInfo[] {
-  const photos: PhotoInfo[] = [];
-  if (raw?.media && raw.photo) {
-    photos.push({
-      messageId: raw.id as number,
-      groupedId: raw.groupedId ?? null,
-      mediaType: "photo",
-    });
+export function collectPhotosFromRaw(raw: any): PhotoInfo {
+  if (raw?.media?.photo) {
+    const photo = raw.media.photo;
+    return {
+      photo: {
+        photoId: photo.id?.value as string,
+        accessHash: photo.accessHash?.value,
+        mediaType: 'photo', 
+      },
+      groupedId: raw?.groupedId?.value || null,
+    }
   }
-  return photos;
+
+  return {photo: null, groupedId: null};
 }

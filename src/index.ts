@@ -28,26 +28,27 @@ const TARGET = (process.env.SEND_MESSAGES_TO || "").trim();
     if (!isSourceGroup.ok) return;
 
     // Parse and format messages
-    const parsedMessage = parseEventData(msg);
-    // console.log(JSON.stringify(parsedMessage, null, 2));
-    console.log(JSON.stringify(msg, null, 2));
+    const parsedEvent = await parseEventData(msg);
+    console.log('Parsed: ', parsedEvent)
+    // console.log(JSON.stringify(parsedEvent, null, 2));
+    // console.log(JSON.stringify(parsedEvent?.media, null, 2));
 
-    if (!parsedMessage) return; // If format is not compare with REDEX ignore message
-    const formattedMsgText = formatMessage(parsedMessage).text; // Format messages function
+    // if (!parsedEvent) return; // If format is not compare with REDEX ignore message
+    // const formattedMsgText = formatMessage(parsedEvent).text; // Format messages function
 
-    // Send formated message to target group
-    try {
-      if (TARGET) {
-        if (parsedMessage.media.photos.length > 0) {
-          // handle messages here
-        } else {
-          await client.sendMessage(TARGET, { message: formattedMsgText });
-          console.log(`✉️ Sent text to ${TARGET}`);
-        }
-      }
-    } catch (e) {
-      console.error(`❌ Message has not been send to ${TARGET}:`, e);
-    }
+    // // Send formated message to target group
+    // try {
+    //   if (TARGET) {
+    //     if (parsedEvent.media.photos.length > 0) {
+    //       // handle messages here
+    //     } else {
+    //       await client.sendMessage(TARGET, { message: formattedMsgText });
+    //       console.log(`✉️ Sent text to ${TARGET}`);
+    //     }
+    //   }
+    // } catch (e) {
+    //   console.error(`❌ Message has not been send to ${TARGET}:`, e);
+    // }
   }, new NewMessage({}));
 })();
 
