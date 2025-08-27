@@ -1,3 +1,4 @@
+import type { Api } from "telegram";
 import client from "../../../config/botInstance.js";
 import type { DownloadedImage, Photo } from "./types.js";
 
@@ -9,26 +10,31 @@ export async function downloadImages(
   if (isSingle(media)) {
     let imgDownloaded = null;
     try {
-      imgDownloaded = await downloadOne(media[0]);
+      const sourcePeer = await client.getInputEntity(media[0].sourcePeer);
+
+      imgDownloaded = await downloadOne(media[0], sourcePeer);
     } catch (error) {}
 
-    return imgDownloaded ? [imgDownloaded] : null;
+    return imgDownloaded ? [imgDownloaded] : [];
   } else if (isAlbum(media)) {
     let imgsDownloaded = null;
     try {
-      imgsDownloaded = await downloadMany(media);
+      const sourcePeer = await client.getInputEntity(media[0].sourcePeer);
+      imgsDownloaded = await downloadMany(media, sourcePeer);
     } catch (error) {}
 
     return imgsDownloaded;
   } else {
     console.error("Downloading images failed, media: ", media);
-    return null;
+    return [];
   }
 }
 
 const isAlbum = (media: Photo[]) =>
   !!media[0].groupedId &&
-  media.every((m) => m.groupedId === media[0].groupedId) &&
+  media.every(
+    (m) => m.groupedId?.toString() === media[0].groupedId?.toString()
+  ) &&
   media.length >= 2;
 
 const isSingle = (media: Photo[]) =>
@@ -36,17 +42,17 @@ const isSingle = (media: Photo[]) =>
 
 // Download one image
 export async function downloadOne(
-  photo: Photo
+  photo: Photo,
+  sourcePeer?: Api.TypeInputPeer | null
 ): Promise<DownloadedImage | null> {
-  const inputPeer = await client.getInputEntity(photo.sourcePeer);
-  if (!inputPeer) {
+  if (!sourcePeer) {
     console.error(
-      `Downloading photo ${photo.photoId} failed, inputPeer is ${inputPeer}`
+      `Downloading photo ${photo.photoId} failed, sourcePeer is ${sourcePeer}`
     );
     return null;
   }
 
-  const [msg] = await client.getMessages(inputPeer, { ids: photo.messageId });
+  const [msg] = await client.getMessages(sourcePeer, { ids: photo.messageId });
   if (!msg) {
     console.error(`Downloading photo ${photo.photoId} failed, msg is ${msg}`);
     return null;
@@ -58,7 +64,9 @@ export async function downloadOne(
     return null;
   }
   const data: Buffer = mediaData;
-  const filename = `${photo.groupedId ?? "single"}-${photo.messageId}.jpg`;
+  const filename = `${photo.groupedId?.toString() ?? "single"}-${
+    photo.messageId
+  }.jpg`;
 
   return {
     data,
@@ -72,19 +80,22 @@ export async function downloadOne(
 // Download many images
 export async function downloadMany(
   photos: Photo[],
-  parallel = 3
+  sourcePeer: Api.TypeInputPeer,
+  parallel = 3 // To download 3 messages at the same time
 ): Promise<DownloadedImage[]> {
-  // Порядок фіксуємо за messageId (стабільно для Telegram)
   const ordered = [...photos].sort((a, b) => a.messageId - b.messageId);
 
   const out: DownloadedImage[] = [];
   for (let i = 0; i < ordered.length; i += parallel) {
     const chunk = ordered.slice(i, i + parallel);
-    const part = await Promise.all(chunk.map((p) => downloadOne(p)));
+    const part = await Promise.all(
+      chunk.map((p) => downloadOne(p, sourcePeer))
+    );
+
     const filteredPart = part.filter(
       (item): item is DownloadedImage => item !== null
     );
     out.push(...filteredPart);
   }
-  return out;
+  return out || [];
 }

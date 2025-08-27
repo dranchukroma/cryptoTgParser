@@ -102,12 +102,10 @@ export async function parseEventData(
     }
 
     // перед самим поверненням ще раз перевіримо, що ми досі актуальні
-    // console.log("return 2: ", albumToken);
     if (albumToken.get(id) !== myToken) return null;
 
     const photos = collectedPhotos.get(id) ?? null;
 
-    console.log(parsedResultWithoutPhotos.has(id))
     if(parsedResultWithoutPhotos.has(id)){
       parseEventResult = parsedResultWithoutPhotos.get(id);
     }
@@ -118,19 +116,16 @@ export async function parseEventData(
     albumToken.delete(id);
     parsedResultWithoutPhotos.delete(id)
 
-    console.log("return 3: ");
     return parseEventResult ? { ...parseEventResult, media: photos } : null;
   }
 
   // якщо є одиночне фото без groupedId — обгортаємо в масив
   if (imageData) {
-    // console.log("return 5: одиночне фото");
     return parseEventResult
       ? { ...parseEventResult, media: [imageData] }
       : null;
   }
 
   // без фото — повертаємо як є
-  console.log("return 6: без фото");
   return parseEventResult;
 }
