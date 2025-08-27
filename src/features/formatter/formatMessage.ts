@@ -168,7 +168,7 @@ const renderers: Record<string, RendererFn> = {
 /**
  * Головна функція форматування
  */
-export function formatMessage(parsed: Parsed | null | undefined): FormattedOutput {
+export async function formatMessage(parsed: Parsed | null | undefined): Promise<FormattedOutput> {
   if (!parsed || !parsed.type) return renderFallback(parsed as any);
   const r = renderers[parsed.type] || renderFallback;
   return r(parsed as any);

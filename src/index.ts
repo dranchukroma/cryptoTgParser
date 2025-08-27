@@ -29,12 +29,11 @@ const TARGET = (process.env.SEND_MESSAGES_TO || "").trim();
 
     // Parse and format messages
     const parsedEvent = await parseEventData(msg);
-    console.log('Parsed: ', parsedEvent)
-    // console.log(JSON.stringify(parsedEvent, null, 2));
-    // console.log(JSON.stringify(parsedEvent?.media, null, 2));
+    if (!parsedEvent) return; // If format is not compare with REDEX ignore message
 
-    // if (!parsedEvent) return; // If format is not compare with REDEX ignore message
-    // const formattedMsgText = formatMessage(parsedEvent).text; // Format messages function
+    
+
+    // const formattedMsgText = await formatMessage(parsedEvent); // Format messages function
 
     // // Send formated message to target group
     // try {
