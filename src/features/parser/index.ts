@@ -76,10 +76,10 @@ export async function parseEventData(
   }
 
   // Parse media
-  const mediaData = collectPhotosFromRaw(msg);
+  const imageData = collectPhotosFromRaw(msg);
 
-  if (mediaData.groupedId && mediaData.photo) {
-    const id: string = mediaData.groupedId;
+  if (imageData && imageData.groupedId) {
+    const id: string = imageData.groupedId;
 
     if (!collectedPhotos.has(id)) {
       parsedResultWithoutPhotos.set(id, parseEventResult);
@@ -87,7 +87,7 @@ export async function parseEventData(
 
     // 1) додати фото в колекцію
     const prev = collectedPhotos.get(id) ?? [];
-    collectedPhotos.set(id, [...prev, mediaData.photo]);
+    collectedPhotos.set(id, [...prev, imageData]);
 
     // 2) позначити час останнього фото та інкрементнути "версію"
     lastSeen.set(id, Date.now());
@@ -123,10 +123,10 @@ export async function parseEventData(
   }
 
   // якщо є одиночне фото без groupedId — обгортаємо в масив
-  if (mediaData.photo) {
+  if (imageData) {
     // console.log("return 5: одиночне фото");
     return parseEventResult
-      ? { ...parseEventResult, media: [mediaData.photo] }
+      ? { ...parseEventResult, media: [imageData] }
       : null;
   }
 

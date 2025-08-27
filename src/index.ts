@@ -9,6 +9,7 @@ import type { Api } from "telegram";
 
 import { parseEventData } from "./features/parser/index.js";
 import { formatMessage } from "./features/formatter/formatMessage.js";
+import { downloadImages } from "./features/parser/images/downloadImages.js";
 
 export type RawMessage = Api.Message | Api.MessageService;
 
@@ -26,12 +27,44 @@ const TARGET = (process.env.SEND_MESSAGES_TO || "").trim();
     const isSourceGroup = await messageSourceDetailed(msg, chanelsToParse);
 
     if (!isSourceGroup.ok) return;
+    const testIMG = [
+      {
+        photoId: '5292198903757796541',
+        accessHash: '-4966717724834958527',
+        messageId: 398,
+        groupedId: 14050508369156186n
+      },
+      {
+        photoId: '5292198903757796542',
+        accessHash: '7557034865168884605',
+        messageId: 399,
+        groupedId: 14050508369156186n
+      },
+      {
+        photoId: '5292198903757796539',
+        accessHash: '-4966717724834958527',
+        messageId: 396,
+        groupedId: 14050508369156186n
+      },
+      {
+        photoId: '5292198903757796540',
+        accessHash: '-4966717724834958527',
+        messageId: 397,
+        groupedId: 14050508369156186n
+      },
+    ]
+
+    // const parsedImages = await downloadImages(testIMG)
 
     // Parse and format messages
     const parsedEvent = await parseEventData(msg);
     if (!parsedEvent) return; // If format is not compare with REDEX ignore message
 
-    
+
+
+    const parsedImages = await downloadImages(parsedEvent.media);
+    console.log(parsedImages);
+
 
     // const formattedMsgText = await formatMessage(parsedEvent); // Format messages function
 

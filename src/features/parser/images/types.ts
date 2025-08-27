@@ -2,24 +2,23 @@ import { Api } from "telegram";
 
 export type MediaType = "photo";
 
-// export type Peer = {
-//   channelId?: Api.PeerChannel;
-//   chatId?: Api.PeerChat;
-// };
-
 export type Peer = Api.PeerChannel | Api.PeerChat;
 
 export type Photo = {
-  photoId: number;
-  accessHash: number;
+  photoId: string;
+  accessHash: string;
   messageId: number;
   fileReference: Buffer;
   dcId: number;
   sourcePeer: Peer;
   mediaType: MediaType;
+  groupedId: string | null;
 };
 
-export type PhotoInfo = {
-  photo: Photo | null;
-  groupedId: string | null; // ідентифікатор альбому (або null)
+export type DownloadedImage = {
+  data: Buffer;
+  filename: string;
+  messageId: number;
+  groupedId: string | null;
+  mime: "image/jpeg";
 };
