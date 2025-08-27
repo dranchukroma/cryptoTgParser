@@ -12,10 +12,10 @@ import {
   UPDATE_STOP_RE,
 } from "../templates/messages.js";
 import { toNumber } from "../../../utils/numbers.js";
-import type { Daily, Review, Side, Signal, SignalUpdate } from "../../types/messages.js";
+import type { parseMessageType, ReviewData, Side, SignalData, SignalUpdateData } from "../../types/messages.js";
 
 
-export function parseSignal(text: string): Signal | null {
+export function parseSignal(text: string): SignalData & {type: parseMessageType} | null {
   const head = text.match(SIGNAL_HEAD_RE);
   if (!head) return null;
 
@@ -33,7 +33,7 @@ export function parseSignal(text: string): Signal | null {
   const levM = text.match(LEV_RE);
 
   // Entry
-  let entry: Signal["entry"] = null;
+  let entry: SignalData["entry"] = null;
   if (entryM) {
     const n1 = toNumber(entryM[1]);
     const n2 = entryM[2] ? toNumber(entryM[2]) : null;
@@ -67,7 +67,7 @@ export function parseSignal(text: string): Signal | null {
   };
 }
 
-export function parseSignalUpdate(text: string): SignalUpdate | null {
+export function parseSignalUpdate(text: string): {type: parseMessageType, update: SignalUpdateData}  | null {
   const has = (re: RegExp) => re.test(text);
   if (has(UPDATE_STOP_RE) || has(UPDATE_MARGIN_RE) || has(UPDATE_CLOSE_RE)) {
     return {
@@ -82,11 +82,11 @@ export function parseSignalUpdate(text: string): SignalUpdate | null {
   return null;
 }
 
-export function parseDaily(text: string): Daily | null {
+export function parseDaily(text: string): {type: parseMessageType} | null {
   return DAILY_RE.test(text) ? { type: "daily" } : null;
 }
 
-export function parseReview(text: string): Review | null {
+export function parseReview(text: string): ReviewData & {type: parseMessageType} | null {
   const m = text.match(REVIEW_HEAD_RE);
   let primary: string | null = null;
   let timeframe: string | null = null;

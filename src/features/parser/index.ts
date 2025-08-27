@@ -1,7 +1,7 @@
 import type { RawMessage } from "../../index.js";
 import { replaceLinks } from "../../utils/links.js";
 import type { Photo } from "../types/images.js";
-import type { WrapResult } from "../types/messages.js";
+import type { parseEventType, WrapResult } from "../types/messages.js";
 import { adaptMsg, wrapResult } from "./helpers.js";
 import { collectPhotosFromRaw } from "./images/parseImages.js";
 import {
@@ -15,8 +15,6 @@ const collectedPhotos = new Map<string, Photo[]>();
 const lastSeen = new Map<string, number>(); // час останнього фото по groupId
 const albumToken = new Map<string, number>(); // версія виклику для скасування попередніх
 const parsedResultWithoutPhotos = new Map(); // версія виклику для скасування попередніх
-
-type parseEventType = WrapResult & { media: Photo[] | null };
 
 export async function parseEventData(
   msg: RawMessage

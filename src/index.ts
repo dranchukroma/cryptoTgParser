@@ -8,8 +8,9 @@ import messageSourceDetailed from "./features/checker/checkMessageSource.js";
 import type { Api } from "telegram";
 
 import { parseEventData } from "./features/parser/index.js";
-import { formatMessage } from "./features/formatter/messages/formatMessage.js";
+import { formatMessage } from "./features/formatter/messages/index.js";
 import { downloadImages } from "./features/parser/images/downloadImages.js";
+import type { dataToFormat } from "./features/types/messages.js";
 
 export type RawMessage = Api.Message | Api.MessageService;
 
@@ -31,12 +32,18 @@ const TARGET = (process.env.SEND_MESSAGES_TO || "").trim();
     const parsedEvent = await parseEventData(msg);
     if (!parsedEvent) return; // If format is not compare with REDEX ignore message
 
-    const formattedMsgText = await formatMessage(parsedEvent); // Format messages function
-
     const parsedImages = await downloadImages(parsedEvent.media); // Move it to parseEventData and here should be formatter;
 
+    const formattedMsgText = await formatMessage(
+      parsedEvent.type,
+      parsedEvent.text,
+      parsedEvent.data as dataToFormat
+    ); // Format messages function
 
-
+    // console.log(parsedEvent)
+    // console.log(formattedMsgText)
+    // console.log(parsedImages)
+    console.log({ ...parsedEvent, formatedText: formattedMsgText, downLoadedMessages: parsedImages})
 
     // // Send formated message to target group
     // try {

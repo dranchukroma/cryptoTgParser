@@ -1,6 +1,6 @@
 import type { Api } from "telegram";
 import type { RawMessage } from "../../index.js";
-import type { MsgLike, WrapResult } from "./messages/types.js";
+import type { MsgLike, WrapResult, parseMessageType } from "../types/messages.js";
 
 export function toUnixSeconds(
   d: number | string | Date | null | undefined
@@ -34,7 +34,7 @@ export function adaptMsg(msg: RawMessage) {
 }
 
 export function wrapResult<T = unknown>(
-  type: string,
+  type: parseMessageType,
   text: string,
   msg: MsgLike, // опціонально прокинемо сирий msg
   data: T = {} as T

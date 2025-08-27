@@ -1,6 +1,6 @@
 import type { Api } from "telegram";
 import client from "../../../config/botInstance.js";
-import type { DownloadedImage, Photo } from "./types.js";
+import type { DownloadedImage, Photo } from "../../types/images.js";
 
 export async function downloadImages(
   media: Photo[] | null

@@ -1,4 +1,4 @@
-import type { Photo } from "./types.js";
+import type { Photo } from "../../types/images.js";
 
 export function collectPhotosFromRaw(raw: any): Photo | null {
   if (raw?.media?.photo) {
