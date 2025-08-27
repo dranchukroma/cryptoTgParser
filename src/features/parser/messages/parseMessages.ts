@@ -12,13 +12,8 @@ import {
   UPDATE_STOP_RE,
 } from "../templates/messages.js";
 import { toNumber } from "../../../utils/numbers.js";
-import type {
-  Daily,
-  Review,
-  Side,
-  Signal,
-  SignalUpdate,
-} from "./types.js";
+import type { Daily, Review, Side, Signal, SignalUpdate } from "../../types/messages.js";
+
 
 export function parseSignal(text: string): Signal | null {
   const head = text.match(SIGNAL_HEAD_RE);

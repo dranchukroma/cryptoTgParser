@@ -1,15 +1,15 @@
 import type { RawMessage } from "../../index.js";
 import { replaceLinks } from "../../utils/links.js";
+import type { Photo } from "../types/images.js";
+import type { WrapResult } from "../types/messages.js";
 import { adaptMsg, wrapResult } from "./helpers.js";
 import { collectPhotosFromRaw } from "./images/parseImages.js";
-import type { Photo } from "./images/types.js";
 import {
   parseDaily,
   parseReview,
   parseSignal,
   parseSignalUpdate,
 } from "./messages/parseMessages.js";
-import type { WrapResult } from "./messages/types.js";
 
 const collectedPhotos = new Map<string, Photo[]>();
 const lastSeen = new Map<string, number>(); // час останнього фото по groupId

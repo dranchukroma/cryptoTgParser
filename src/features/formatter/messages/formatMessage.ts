@@ -2,10 +2,7 @@
 // Вхід: parsed (з classifyAndExtract)
 // Вихід: { type, text, attachments, meta } — text повністю готовий до відправки
 
-// ── типи з вашого пайплайну ───────────────────────────────────────────────────
-
-
-
+import type { FormattedOutput, Parsed, ParsedSignal } from "../../types/messages.js";
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 const DEFAULT_PRICE_DECIMALS: number = Number(process.env.PRICE_DECIMALS ?? 6);
