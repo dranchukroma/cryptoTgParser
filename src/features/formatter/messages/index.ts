@@ -1,5 +1,5 @@
 import type { parseMessageType, ReviewData, SignalData, SignalUpdateData } from "../../types/messages.js";
-import { renderDaily, renderReview, renderSignal, renderSignalUpdate } from "./formatByType.js";
+import { renderDaily, renderReview, renderSignal, renderSignalUpdate } from "./messageFormatter.js";
 
 export async function formatMessage(
     type: parseMessageType | null,

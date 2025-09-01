@@ -33,7 +33,7 @@ export async function sendMessage(
       await delay();
     }
   } catch (error) {
-    console.log("send Message failed: ", error);
+    console.log("Send Message failed: ", error);
   }
 }
 

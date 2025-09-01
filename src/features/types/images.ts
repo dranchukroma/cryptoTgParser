@@ -1,3 +1,4 @@
+import type { Sharp } from "sharp";
 import { Api } from "telegram";
 
 export type MediaType = "photo";
@@ -22,3 +23,21 @@ export type DownloadedImage = {
   groupedId: string | null;
   mime: "image/jpeg";
 };
+
+export type RGBBuffer = Buffer | Uint8Array;
+export type DetectFn = (img: Sharp) => Promise<boolean>;
+export type TransformFn = (imgBuffer: Buffer) => Promise<Buffer>;
+export type TemplateActions = 'binxSignal'
+
+export interface DetectedTemplate {
+  id: string;
+  action: string;
+  transform: TransformFn;
+}
+
+export interface TemplateDef {
+  id: string;
+  detect: DetectFn;
+  transform: TransformFn;
+  action: TemplateActions;
+}

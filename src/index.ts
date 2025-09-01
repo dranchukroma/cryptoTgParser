@@ -10,6 +10,7 @@ import { formatMessage } from "./features/formatter/messages/index.js";
 import { downloadImages } from "./features/parser/images/downloadImages.js";
 import type { dataToFormat } from "./features/types/messages.js";
 import { sendMessage } from "./features/sendler/index.js";
+import { formatMedia } from "./features/formatter/images/index.js";
 
 export type RawMessage = Api.Message | Api.MessageService;
 
@@ -28,21 +29,21 @@ export type RawMessage = Api.Message | Api.MessageService;
     // Parse and format messages
     const parsedEvent = await parseEventData(msg);
     if (!parsedEvent) return; // If format is not compare with REDEX ignore message
-    // TO DO return empty only if messages and images are null
 
     // Download images
     const parsedImages = await downloadImages(parsedEvent.media); // Move it to parseEventData and here should be formatter;
+
+    // Format images
+    const formattedMedia = await formatMedia(parsedImages)
 
     // Format messages
     const formattedMsgText = await formatMessage(
       parsedEvent.type,
       parsedEvent.text,
-      parsedEvent.data as dataToFormat
+      parsedEvent.data as dataToFormat,
     );
 
     // Send formated message to target group
-    await sendMessage(formattedMsgText, parsedImages, parsedEvent.type);
+    await sendMessage(formattedMsgText, formattedMedia, parsedEvent.type);
   }, new NewMessage({}));
 })();
-
-//client.pinMessage() -- закріплення повідомлення

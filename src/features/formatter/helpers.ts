@@ -1,4 +1,4 @@
-import { priceDecimals } from "../../../config/constants.js";
+import { priceDecimals } from "../../config/constants.js";
 
 export function fmtNum(v: unknown, decimals = priceDecimals): string {
     if (v == null || Number.isNaN(Number(v))) return "—";
