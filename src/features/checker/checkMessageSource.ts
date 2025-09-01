@@ -16,7 +16,7 @@ type MessageSourceResult = {
  * It can be group id ('-100...'), username ('@username) or chat id
  * Return detail of match for loggining
  */
-export async function messageSourceDetailed(
+export async function checkMessageSource(
   msg: RawMessage,
   sources: string[]
 ): Promise<MessageSourceResult> {
@@ -59,4 +59,4 @@ export async function messageSourceDetailed(
   return { ok: false, by: null, matched: null, index: null };
 }
 
-export default messageSourceDetailed;
+export default checkMessageSource;
